@@ -1,5 +1,5 @@
 import json
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, url_for
 
 app = Flask(__name__)
 
@@ -16,48 +16,39 @@ def query_records():
     else:
         return jsonify({'error': 'data not found'})
 
-# @app.route('/', methods=['PUT'])
-# def create_record():
-#     record = json.loads(request.data)
-#     with open('/tmp/data.txt', 'r') as f:
-#         data = f.read()
-#     if not data:
-#         records = [record]
-#     else:
-#         records = json.loads(data)
-#         records.append(record)
-#     with open('/tmp/data.txt', 'w') as f:
-#         f.write(json.dumps(records, indent=2))
-#     return jsonify(record)
+# Carrega o arquivo JSON com as informações da API
+with open('api.json') as f:
+    api_data = json.load(f)
 
-# @app.route('/', methods=['POST'])
-# def update_record():
-#     record = json.loads(request.data)
-#     new_records = []
-#     with open('/tmp/data.txt', 'r') as f:
-#         data = f.read()
-#         records = json.loads(data)
-#     for r in records:
-#         if r['name'] == record['name']:
-#             r['email'] = record['email']
-#         new_records.append(r)
-#     with open('/tmp/data.txt', 'w') as f:
-#         f.write(json.dumps(new_records, indent=2))
-#     return jsonify(record)
-    
-# @app.route('/', methods=['DELETE'])
-# def delte_record():
-#     record = json.loads(request.data)
-#     new_records = []
-#     with open('/tmp/data.txt', 'r') as f:
-#         data = f.read()
-#         records = json.loads(data)
-#         for r in records:
-#             if r['name'] == record['name']:
-#                 continue
-#             new_records.append(r)
-#     with open('/tmp/data.txt', 'w') as f:
-#         f.write(json.dumps(new_records, indent=2))
-#     return jsonify(record)
 
-app.run(debug=True)
+# Define um dicionário para armazenar as rotas e endpoints
+route_endpoints = {}
+
+# Define as rotas e métodos da API com base nas informações do arquivo JSON
+for route, methods in api_data.items():
+    for method, response_data in methods.items():
+        for index, mock_data in enumerate(response_data):
+            def create_mock_api(data):
+                def mock_api():
+                    return jsonify(data['response']), data['status']
+                return mock_api
+
+            # Cria um nome exclusivo para a função de visualização
+            endpoint_name = f"mock_api_{route}_{method}_{index}"
+
+            # Registra a função de visualização na aplicação Flask
+            app.add_url_rule(route, view_func=create_mock_api(mock_data), methods=[method], endpoint=endpoint_name)
+
+            # Armazena a rota e o endpoint no dicionário
+            route_endpoints[route] = endpoint_name
+
+# Exibe as rotas e endpoints
+for route, endpoint in route_endpoints.items():
+    print(f"Rota: {route}")
+    print("")
+
+
+
+# app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)

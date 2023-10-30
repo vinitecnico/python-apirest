@@ -1,0 +1,62 @@
+{
+    "/users": {
+      "GET": [
+        {
+          "response": {
+            "message": "List of users",
+            "data": [
+              {
+                "id": 1,
+                "name": "John Doe",
+                "email": "john.doe@example.com"
+              },
+              {
+                "id": 2,
+                "name": "Jane Smith",
+                "email": "jane.smith@example.com"
+              }
+            ]
+          },
+          "status": 200
+        }
+      ],
+      "POST": [
+        {
+          "response": {
+            "message": "User created successfully"
+          },
+          "status": 201
+        }
+      ]
+    },
+    "/products": {
+      "GET": [
+        {
+          "response": {
+            "message": "List of products",
+            "data": [
+              {
+                "id": 1,
+                "name": "Product 1",
+                "price": 10.99
+              },
+              {
+                "id": 2,
+                "name": "Product 2",
+                "price": 19.99
+              }
+            ]
+          },
+          "status": 200
+        }
+      ],
+      "POST": [
+        {
+          "response": {
+            "message": "Product created successfully"
+          },
+          "status": 201
+        }
+      ]
+    }
+  }
