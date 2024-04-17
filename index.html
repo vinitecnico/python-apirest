@@ -1,0 +1,24 @@
+<form [formGroup]="form" (ngSubmit)="submitForm()">
+    <label for="releaseName">Nome do Lançamento:</label>
+    <input type="text" id="releaseName" formControlName="release_name">
+  
+    <div formArrayName="expansao">
+      <div *ngFor="let item of expansao.controls; let i = index;" [formGroupName]="i">
+        <label for="flavor{{i}}">Flavor:</label>
+        <input type="text" id="flavor{{i}}" formControlName="flavor">
+  
+        <label for="status{{i}}">Status:</label>
+        <input type="text" id="status{{i}}" formControlName="status">
+  
+        <button type="button" (click)="removeExpansao(i)">Remover</button>
+  
+        <div *ngIf="expansao.controls[i].get('flavor').hasError('duplicateFlavor')">
+          Flavor duplicado!
+        </div>
+      </div>
+    </div>
+  
+    <button type="button" (click)="addExpansao()">Adicionar</button>
+  
+    <button type="submit">Enviar</button>
+  </form>
